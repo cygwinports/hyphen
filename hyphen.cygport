@@ -1,0 +1,38 @@
+NAME="hyphen"
+VERSION=2.8.8
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Hyphenation library"
+DESCRIPTION="A hyphenation library to use converted TeX hyphenation patterns"
+HOMEPAGE="http://sourceforge.net/project/hunspell/"
+SRC_URI="mirror://sourceforge/hunspell/hyphen-${VERSION}.tar.gz"
+PATCH_URI="2.8.8-no-undefined.patch"
+
+PKG_NAMES="libhyphen0 libhyphen-devel hyphen-en"
+libhyphen0_REQUIRES="hyphen-en"
+libhyphen0_CONTENTS="usr/bin/cyghyphen-0.dll"
+libhyphen_devel_CONTENTS="
+	usr/bin/substrings.pl
+	usr/include/hyphen.h
+	usr/lib/libhyphen.dll.a
+"
+hyphen_en_CATEGORY="Text"
+hyphen_en_SUMMARY="English hyphenation rules"
+hyphen_en_CONTENTS="
+	usr/share/doc/${NAME}
+	usr/share/hyphen/hyph_en_*
+"
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	for lang in en_AG en_AU en_BS en_BW en_BZ en_CA en_DK en_GB en_GH \
+	            en_HK en_IE en_IN en_JM en_MW en_NA en_NZ en_PH en_SG \
+	            en_TT en_ZA en_ZM en_ZW
+	do
+		dosym hyph_en_US.dic /usr/share/hyphen/hyph_$lang.dic
+	done
+}
+
+DOCS="README*"
